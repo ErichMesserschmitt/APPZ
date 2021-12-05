@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<APPZ_new.Models.Question>
 
 @{
-    ViewData["Title"] = "OpenedTask";
+    ViewData["Title"] = "CreateTask";
 }
 
-<h1>OpenedTask</h1>
+<h1>@ViewBag.TaskName</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="CreateQuestion" asp-route-id='@ViewBag.TaskId'>Add question</a>
 </p>
 <table class="table">
     <thead>

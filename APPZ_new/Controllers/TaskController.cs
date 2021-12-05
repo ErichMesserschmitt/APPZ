@@ -32,8 +32,28 @@ namespace APPZ_new.Controllers
         [HttpGet]
         public IActionResult OpenTask(int? id)
         {
-            var questions = _db.Questions.ToList();//.FindAll(s => s.Id == id);
+            var questions = _db.Questions.ToList().FindAll(s => s.TaskId == id);
+            var task = _db.Tasks.FirstOrDefault(s => s.Id == id);
+            ViewBag.TaskName = task.Title;
+            ViewBag.TaskId = task.Id;
             return View("OpenedTask", questions);
+        }
+
+        [HttpGet]
+        public IActionResult CreateQuestion(int? id)
+        {
+            var task = _db.Tasks.FirstOrDefault(s => s.Id == id);
+            ViewBag.TaskName = task.Title;
+            return View("CreateQuestion");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateQuestion(APPZ_new.Models.Question obj)
+        {
+            _db.Questions.Add(obj);
+            _db.SaveChanges();
+            return RedirectToAction("CreateQuestion");
         }
 
         [HttpPost]
