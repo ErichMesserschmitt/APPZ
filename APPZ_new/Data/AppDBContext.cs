@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using APPZ_new.Models;
-using Task = System.Threading.Tasks.Task;
 
 namespace APPZ_new.Data
 {
@@ -34,10 +33,15 @@ namespace APPZ_new.Data
                 .WithOne(e => e.Category)
                 .HasForeignKey(e => e.CategoryId);
 
-            modelBuilder.Entity<Models.Task>()
+            modelBuilder.Entity<Task>()
                 .HasOne(e => e.Category)
                 .WithMany(e => e.Tasks)
                 .HasForeignKey(e => e.CategoryId);
+
+            modelBuilder.Entity<Task>()
+                .HasMany(e => e.Questions)
+                .WithOne(e => e.Task)
+                .HasForeignKey(e => e.TaskId);
 
             modelBuilder.Entity<UserTask>()
                 .HasOne(e => e.User)
@@ -49,7 +53,6 @@ namespace APPZ_new.Data
                 .WithMany(e => e.Users)
                 .HasForeignKey(e => e.TaskId);
 
-            modelBuilder.Entity<Category>().HasData(new Category { Id = 1, Title = "None", Description = "None" });
         }
 
     }

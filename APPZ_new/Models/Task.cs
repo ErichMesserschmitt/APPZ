@@ -29,9 +29,12 @@ namespace APPZ_new.Models
 
         public virtual ICollection<UserTask> Users { get; set; }
 
-       public Task()
+        public virtual ICollection<Question> Questions { get; set; }
+
+        public Task()
         {
             Users = new HashSet<UserTask>();
+            Questions = new HashSet<Question>();
         }
     }
 }

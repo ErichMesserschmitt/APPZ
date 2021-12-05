@@ -19,6 +19,10 @@ namespace APPZ_new.Models
 
         public virtual ICollection<Answer> Answers { get; set; }
 
+
+        public int TaskId { get; set; }
+        public virtual Task Task { get; set; }
+
         Question()
         {
             Answers = new HashSet<Answer>();
