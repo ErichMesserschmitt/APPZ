@@ -20,12 +20,20 @@ namespace APPZ_new.Controllers
         public IActionResult Index()
         {
             IEnumerable<Models.Task> objList = _db.Tasks;
+            ViewBag.Questions = _db.Questions;
             return View(objList);
         }
         public IActionResult Create()
         {
             ViewBag.Category = _db.Categorys.ToList();
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult OpenTask(int? id)
+        {
+            var questions = _db.Questions.ToList();//.FindAll(s => s.Id == id);
+            return View("OpenedTask", questions);
         }
 
         [HttpPost]
