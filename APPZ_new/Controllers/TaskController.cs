@@ -65,7 +65,6 @@ namespace APPZ_new.Controllers
             var questions = _db.Questions.ToList().FindAll(s => s.TaskId == obj.TaskId);
             var task = _db.Tasks.FirstOrDefault(s => s.Id == obj.TaskId);
             ViewBag.TaskName = task.Title;
-            ViewBag.TaskId = task.Id;
             return View("OpenedTask", questions);
         }
 
@@ -75,12 +74,15 @@ namespace APPZ_new.Controllers
             var question = _db.Questions.FirstOrDefault(s => s.Id == id);
             ViewBag.QuestionName = question.QuestionTest;
             ViewBag.QuestionId = question.Id;
+            ViewBag.TaskId = question.TaskId;
             return View("OpenQuestion", answers);
         }
 
         public IActionResult ViewAnswers(int? id)
         {
             var answers = _db.Answers.ToList().FindAll(s => s.QuestionId == id);
+            ViewBag.QuestionId = id;
+            ViewBag.TaskId = _db.Questions.FirstOrDefault(s => s.Id == id).TaskId;
             return View("ViewAnswers", answers);
         }
 
@@ -108,6 +110,7 @@ namespace APPZ_new.Controllers
             var question = _db.Questions.FirstOrDefault(s => s.Id == obj.QuestionId);
             ViewBag.QuestionName = question.QuestionTest;
             ViewBag.QuestionId = question.Id;
+            ViewBag.TaskId = question.TaskId;
             return View("OpenQuestion", answers);
         }
 
