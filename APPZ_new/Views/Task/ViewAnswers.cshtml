@@ -1,0 +1,44 @@
+﻿@model IEnumerable<APPZ_new.Models.Answer>
+
+@{
+    ViewData["Title"] = "ViewAnswers";
+}
+
+<h1>View Answers</h1>
+
+<p>
+    <a asp-action="CreateAnswer">Add possible answer</a>
+    <br />
+    <a asp-action="OpenTask" asp-route-id="@ViewBag.TaskId">Back</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               Question
+            </th>
+            <th>
+               Answer
+            </th>
+            <th>
+               Is Answer Correct
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Question.QuestionTest)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AnswerText)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsCorrect)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

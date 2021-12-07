@@ -3,11 +3,13 @@
 @{
     ViewData["Title"] = "OpenQuestion";
 }
-
-<h1>OpenQuestion</h1>
+<h1>@ViewBag.QuestionName</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="CreateAnswer" asp-route-id="@ViewBag.QuestionId">Add Answer</a>
+    <br />
+    <a asp-action="OpenTask" asp-route-id="@ViewBag.TaskId">Back</a>
+
 </p>
 <table class="table">
     <thead>
