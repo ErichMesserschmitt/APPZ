@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using APPZ_new.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using APPZ_new.Models.Initializers;
 
 namespace APPZ_new
 {
@@ -23,6 +24,7 @@ namespace APPZ_new
                 db.Database.Migrate();
                 var identityDB = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 identityDB.Database.Migrate();
+                RoleAndUserInitializer.Initialize(scope.ServiceProvider);
             }
             host.Run();
         }

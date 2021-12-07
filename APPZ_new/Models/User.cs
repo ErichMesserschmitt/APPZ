@@ -1,4 +1,5 @@
-﻿using System;
+﻿using APPZ_new.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,9 +17,11 @@ namespace APPZ_new.Models
 
         public string Name { get; set; }
 
+        public UserRole Role { get; set; }
+
         public virtual ICollection<UserTask> Tasks { get; set; }
 
-        User()
+        public User()
         {
             Tasks = new HashSet<UserTask>();
         }
