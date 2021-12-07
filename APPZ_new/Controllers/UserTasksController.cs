@@ -33,31 +33,28 @@ namespace APPZ_new.Controllers
                 .ThenInclude(x => x.Answers)
                 .FirstOrDefaultAsync(x => x.Id == taskId);
 
-            if(task == null)
-            {
-                //back to task list
-            }
-
             var isAlteadyCompleted = _context.UserTasks.Any(x => x.TaskId == taskId && x.UserId == userId);
-            if (isAlteadyCompleted)
-            {
-                //back to task list
-            }
 
-            var dto = new DoTaskModel { UserId = userId, TaskId = taskId, TaskTitle = task.Title, Questions = task.Questions };
+            var questionsDto = task.Questions.Select(x => new QuestionDto
+            {
+                Id = x.Id,
+                QuestionTest = x.QuestionTest,
+                Answers = x.Answers,
+                TaskId = x.TaskId
+            });
+
+            var dto = new DoTaskModel { UserId = userId, TaskId = taskId, TaskTitle = task.Title, Questions = questionsDto };
 
             return View(dto);
         }
 
         public async Task<ActionResult> CompleteTask(IFormCollection form)
         {
-            var test = form;
             var userId = int.Parse(form["UserId"]);
             var taskId = int.Parse(form["TaskId"]);
-            string[] answerIdsStr = form["item.Answers"];
+            string[] answerIdsStr = form["item.AnswerId"];
             var answerIds = Array.ConvertAll(answerIdsStr, id => int.Parse(id));
 
-            //save results to db calculate mark and some it
             var answers = _context.Answers.Where(x => answerIds.Contains(x.Id));
             var result = new ResultDTO
             {
@@ -82,73 +79,6 @@ namespace APPZ_new.Controllers
         {
             return View(resultDto);
         }
-
-
-        // GET: UserTasks/Create
-        public IActionResult Create()
-        {
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Title");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
-        }
-
-        // POST: UserTasks/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,TaskId,Mark,Status")] UserTask userTask)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(userTask);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Title", userTask.TaskId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userTask.UserId);
-            return View(userTask);
-        }
-
- 
-
-        // POST: UserTasks/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,TaskId,Mark,Status")] UserTask userTask)
-        {
-            if (id != userTask.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(userTask);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserTaskExists(userTask.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["TaskId"] = new SelectList(_context.Tasks, "Id", "Title", userTask.TaskId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", userTask.UserId);
-            return View(userTask);
-        }
-
 
         private bool UserTaskExists(int id)
         {

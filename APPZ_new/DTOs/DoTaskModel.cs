@@ -1,4 +1,5 @@
-﻿using APPZ_new.Models;
+﻿using APPZ_new.Enums;
+using APPZ_new.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,7 @@ namespace APPZ_new.DTOs
         public string TaskTitle { get; set; }
         public int UserId { get; set; }
 
-        public IEnumerable<Question> Questions { get; set; }
+        public IEnumerable<QuestionDto> Questions { get; set; }
 
-        public IEnumerable<Answer> Answers { get; set; }
     }
 }
