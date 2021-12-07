@@ -1,0 +1,35 @@
+﻿@model APPZ_new.DTOs.ResultDTO
+
+@{
+    ViewData["Title"] = "ViewResult";
+}
+
+<h1>ViewResult</h1>
+
+<div>
+    <h4>Your Result</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CorrectAnswersCount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CorrectAnswersCount)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalQuestionsCount)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TotalQuestionsCount)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Mark)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Mark)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Back to Tasks</a><!-- redirect to task list-->
+</div>
