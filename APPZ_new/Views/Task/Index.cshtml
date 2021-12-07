@@ -32,7 +32,7 @@
                                 <div class="w-100 btn-group" role="group">
                                     <a asp-controller="Expense" asp-action="Update" asp-route-Id="@task.Id" class="btn btn-primary mx-1">Update</a>
                                     <a asp-controller="Expense" asp-action="Delete" asp-route-Id="@task.Id" class="btn btn-danger mx-1">Delete</a>
-                                    <a asp-controller="Task" asp-action="OpenTask" asp-route-Id="@task.Id" class="btn btn-danger mx-1">View</a>
+                                    <a asp-controller="Task" asp-action="OpenTask" asp-route-Id="@task.Id" class="btn btn-success mx-1">View</a>
                                 </div>
                             </td>
                             </tr>
@@ -48,37 +48,4 @@
 
     </div>
     <br/>
-    @if (Model.Count()>0)
-    {
-        <table class="table table-bordered table-striped" style="width: 100%">
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Descriptions</th>
-                    <th>Severity</th>
-                    <th>Options</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach (var task in Model)
-            {
-                <tr>
-                    <td width="25%">@task.Title</td>
-                    <td width="25%">@task.Description</td>
-                    <td width="25%">@task.Severity</td>
-                    <td width="30%">
-                        <div class="w-100 btn-group" role="group">
-                            <a asp-controller="Task" asp-action="Update" asp-route-Id="@task.Id" class="btn btn-primary mx-1">Updatee</a>
-                            <a asp-controller="Task" asp-action="Delete" asp-route-Id="@task.Id" class="btn btn-danger mx-1">Delete</a>
-                        </div>
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>No items created yet </p>
-    }
 </div>

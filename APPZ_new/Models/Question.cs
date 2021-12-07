@@ -23,7 +23,7 @@ namespace APPZ_new.Models
         public int TaskId { get; set; }
         public virtual Task Task { get; set; }
 
-        Question()
+        public Question()
         {
             Answers = new HashSet<Answer>();
         }
