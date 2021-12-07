@@ -78,13 +78,50 @@ namespace APPZ_new.Controllers
             return View("OpenQuestion", answers);
         }
 
+        public IActionResult ViewAnswers(int? id)
+        {
+            var answers = _db.Answers.ToList().FindAll(s => s.QuestionId == id);
+            return View("ViewAnswers", answers);
+        }
+
+        [HttpGet]
+        public IActionResult CreateAnswer(int? id)
+        {
+            var question = _db.Questions.FirstOrDefault(s => s.Id == id);
+            ViewBag.QuestionId = question.Id;
+            Answer answer = new Answer
+            {
+                QuestionId = question.Id,
+                Id = 0
+            };
+            return View("CreateAnswer", answer);
+
+        }
+        [HttpPost]
+        public IActionResult CreateAnswer(Answer obj)
+        {
+            obj.Id = 0;
+            _db.Answers.Add(obj);
+            _db.SaveChanges();
+
+            var answers = _db.Answers.ToList().FindAll(s => s.QuestionId == obj.QuestionId);
+            var question = _db.Questions.FirstOrDefault(s => s.Id == obj.QuestionId);
+            ViewBag.QuestionName = question.QuestionTest;
+            ViewBag.QuestionId = question.Id;
+            return View("OpenQuestion", answers);
+        }
+
         public IActionResult DeleteQuestion(int? id)
         {
             var question = _db.Questions.FirstOrDefault(s => s.Id == id);
             int taskId = question.TaskId;
             _db.Questions.Remove(question);
             _db.SaveChanges();
-            return RedirectToAction("OpenedTask");
+
+            ViewBag.TaskName = "test";
+            ViewBag.TaskId = taskId;
+            var questions = _db.Questions.ToList().FindAll(s => s.TaskId == taskId);
+            return View("OpenedTask", questions);
         }
 
         [HttpPost]
@@ -96,8 +133,7 @@ namespace APPZ_new.Controllers
             return RedirectToAction("Index");
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
         public IActionResult DeleteTask(int? id)
         {
             var obj = _db.Tasks.Find(id);
