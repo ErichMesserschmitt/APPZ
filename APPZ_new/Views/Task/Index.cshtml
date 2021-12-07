@@ -30,8 +30,7 @@
                             <td width="25%">@task.Severity</td>
                             <td width="30%">
                                 <div class="w-100 btn-group" role="group">
-                                    <a asp-controller="Expense" asp-action="Update" asp-route-Id="@task.Id" class="btn btn-primary mx-1">Update</a>
-                                    <a asp-controller="Expense" asp-action="Delete" asp-route-Id="@task.Id" class="btn btn-danger mx-1">Delete</a>
+                                    <a asp-controller="Task" asp-action="DeleteTask" asp-route-Id="@task.Id" class="btn btn-danger mx-1">Delete</a>
                                     <a asp-controller="Task" asp-action="OpenTask" asp-route-Id="@task.Id" class="btn btn-success mx-1">View</a>
                                 </div>
                             </td>

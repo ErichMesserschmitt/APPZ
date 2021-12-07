@@ -26,7 +26,7 @@ namespace APPZ_new.Controllers
 
         public async Task<IActionResult> StartTask()
         {
-            var taskId = 3;
+            var taskId = 2;
             var userId = 1;
             var task = await _context.Tasks
                 .Include(x => x.Questions)
