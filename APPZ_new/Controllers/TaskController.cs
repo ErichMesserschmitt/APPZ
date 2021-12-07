@@ -84,7 +84,7 @@ namespace APPZ_new.Controllers
             int taskId = question.TaskId;
             _db.Questions.Remove(question);
             _db.SaveChanges();
-            return RedirectToAction("OpenedTask");
+            return RedirectToAction("OpenTask", taskId);
         }
 
         [HttpPost]
