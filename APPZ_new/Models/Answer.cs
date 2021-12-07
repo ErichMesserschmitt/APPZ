@@ -15,7 +15,7 @@ namespace APPZ_new.Models
         public int Id { get; set; }
         [Required]
         public string AnswerText { get; set; }
-        public string IsCorrect { get; set; }
+        public bool IsCorrect { get; set; }
 
         public int QuestionId { get; set; }
         public virtual Question Question { get; set; }
