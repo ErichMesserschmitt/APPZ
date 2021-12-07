@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using APPZ_new.Data;
 using APPZ_new.Enums;
 using Task = APPZ_new.Models.Task;
+using APPZ_new.Models;
 
 namespace APPZ_new.Controllers
 {
@@ -45,16 +46,45 @@ namespace APPZ_new.Controllers
         {
             var task = _db.Tasks.FirstOrDefault(s => s.Id == id);
             ViewBag.TaskName = task.Title;
-            return View("CreateQuestion");
+            ViewBag.DependencyId = task.Id;
+            Question _quest = new Question
+            {
+                TaskId = task.Id
+            };
+            return View("CreateQuestion", _quest);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult CreateQuestion(APPZ_new.Models.Question obj)
         {
+            obj.Task = _db.Tasks.FirstOrDefault(s => s.Id == obj.TaskId);
+            obj.Id = 0;
             _db.Questions.Add(obj);
             _db.SaveChanges();
-            return RedirectToAction("CreateQuestion");
+
+            var questions = _db.Questions.ToList().FindAll(s => s.TaskId == obj.TaskId);
+            var task = _db.Tasks.FirstOrDefault(s => s.Id == obj.TaskId);
+            ViewBag.TaskName = task.Title;
+            ViewBag.TaskId = task.Id;
+            return View("OpenedTask", questions);
+        }
+
+        public IActionResult OpenQuestion(int? id)
+        {
+            var answers = _db.Answers.ToList().FindAll(s => s.QuestionId == id);
+            var question = _db.Questions.FirstOrDefault(s => s.Id == id);
+            ViewBag.QuestionName = question.QuestionTest;
+            ViewBag.QuestionId = question.Id;
+            return View("OpenQuestion", answers);
+        }
+
+        public IActionResult DeleteQuestion(int? id)
+        {
+            var question = _db.Questions.FirstOrDefault(s => s.Id == id);
+            int taskId = question.TaskId;
+            _db.Questions.Remove(question);
+            _db.SaveChanges();
+            return RedirectToAction("OpenedTask");
         }
 
         [HttpPost]

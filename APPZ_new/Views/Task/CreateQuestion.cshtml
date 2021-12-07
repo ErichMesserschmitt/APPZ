@@ -4,7 +4,7 @@
     ViewData["Title"] = "CreateQuestion";
 }
 
-<h1>Add a question for task @ViewBag.TaskName</h1>
+<h1>CreateQuestion</h1>
 
 <h4>Question</h4>
 <hr />
@@ -13,13 +13,15 @@
         <form asp-action="CreateQuestion">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="QuestionTest" class="control-label">Enter Question Title</label>
+                <label asp-for="QuestionTest" class="control-label"></label>
                 <input asp-for="QuestionTest" class="form-control" />
                 <span asp-validation-for="QuestionTest" class="text-danger"></span>
             </div>
-            
             <div class="form-group">
-                <input type="submit" value="CreateQuestion" class="btn btn-primary" />
+                <input asp-for="TaskId" type="hidden"/>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
