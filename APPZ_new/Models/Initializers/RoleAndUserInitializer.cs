@@ -25,7 +25,7 @@ namespace APPZ_new.Models.Initializers
             if (!identityContext.Users.Any(u => u.UserName == superAdmin.UserName))
             {
                 var password = new PasswordHasher<ApplicationUser>();
-                var hashed = password.HashPassword(superAdmin, "Qw1234!");
+                var hashed = password.HashPassword(superAdmin, _passwords[0]);
                 superAdmin.PasswordHash = hashed;
 
                 var userStore = new UserStore<ApplicationUser>(identityContext);
@@ -60,8 +60,8 @@ namespace APPZ_new.Models.Initializers
             {
                 Email = "admin@mail.com",
                 NormalizedEmail = "ADMIN@MAIL.COM",
-                UserName = "admin",
-                NormalizedUserName = "ADMIN",
+                UserName = "admin@mail.com",
+                NormalizedUserName = "ADMIN@MAIL.COM",
                 PhoneNumber = "+111111111111",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
@@ -73,10 +73,10 @@ namespace APPZ_new.Models.Initializers
         {
             return new ApplicationUser
             {
-                Email = "admin1@mail.com",
-                NormalizedEmail = "ADMIN1@MAIL.COM",
-                UserName = "Ivan Administrator",
-                NormalizedUserName = "IVAN ADMINISTRATOR",
+                Email = "adminivan@mail.com",
+                NormalizedEmail = "ADMINIVAN@MAIL.COM",
+                UserName = "adminivan@mail.com",
+                NormalizedUserName = "ADMINIVAN@MAIL.COM",
                 PhoneNumber = "+111111111111",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
