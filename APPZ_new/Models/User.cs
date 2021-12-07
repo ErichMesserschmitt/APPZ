@@ -11,7 +11,7 @@ namespace APPZ_new.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Column("AnswerId")]
+        [Column("UserId")]
         public int Id { get; set; }
 
         public string Name { get; set; }

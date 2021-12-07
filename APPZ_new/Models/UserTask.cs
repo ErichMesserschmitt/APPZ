@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using TaskStatus = APPZ_new.Enums.TaskStatus;
 
 namespace APPZ_new.Models
 {
