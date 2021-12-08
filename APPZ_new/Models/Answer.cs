@@ -19,5 +19,7 @@ namespace APPZ_new.Models
 
         public int QuestionId { get; set; }
         public virtual Question Question { get; set; }
+
+        public virtual ICollection<UserTask> UserTasks { get; set; }
     }
 }

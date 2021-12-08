@@ -3,14 +3,16 @@ using APPZ_new.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace APPZ_new.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20211208184626_RemoveUsesTaskToAnswerRelationship")]
+    partial class RemoveUsesTaskToAnswerRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -161,21 +163,6 @@ namespace APPZ_new.Migrations
                     b.ToTable("UserTasks");
                 });
 
-            modelBuilder.Entity("AnswerUserTask", b =>
-                {
-                    b.Property<int>("UserAnswersId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserTasksId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserAnswersId", "UserTasksId");
-
-                    b.HasIndex("UserTasksId");
-
-                    b.ToTable("AnswerUserTask");
-                });
-
             modelBuilder.Entity("APPZ_new.Models.Answer", b =>
                 {
                     b.HasOne("APPZ_new.Models.Question", "Question")
@@ -226,21 +213,6 @@ namespace APPZ_new.Migrations
                     b.Navigation("Task");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("AnswerUserTask", b =>
-                {
-                    b.HasOne("APPZ_new.Models.Answer", null)
-                        .WithMany()
-                        .HasForeignKey("UserAnswersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("APPZ_new.Models.UserTask", null)
-                        .WithMany()
-                        .HasForeignKey("UserTasksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("APPZ_new.Models.Category", b =>

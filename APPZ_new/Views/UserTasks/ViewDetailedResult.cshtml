@@ -1,0 +1,34 @@
+﻿@model APPZ_new.Models.UserTask
+
+@{
+    ViewData["Title"] = "ViewDetailedResult";
+}
+
+<div>
+    <h4>UserTask</h4>
+    <hr />
+    <h1>@Html.DisplayFor(model => model.Task.Title)</h1>
+    <h3>
+        @Html.DisplayNameFor(model => model.Mark):
+
+        @Html.DisplayFor(model => model.Mark)
+    </h3>
+    <h3>
+        @Html.DisplayNameFor(model => model.Status):
+        
+        @Html.DisplayFor(model => model.Status)
+    </h3>
+    <h3>Your answers</h3>
+    @foreach (var item in Model.UserAnswers)
+    {
+        <h4>@Html.DisplayFor(model => item.Question.QuestionTest)</h4>
+        <div class="input-group input-group-sm">
+
+            <h6>@Html.TextBoxFor(model => item.AnswerText, new { @readonly = "readonly", @class = item.IsCorrect ? "bg-success input-group-text" : "bg-danger input-group-text" })</h6>
+        </div>
+
+    }
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
