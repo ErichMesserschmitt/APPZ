@@ -1,8 +1,50 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+    @{
+        ViewData["Title"] = "Home Page";
+    }
+
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <h1 class="display-3 text-center">Select module</h1>
+        <div>
+            <table>
+                <tr>
+                    <br />
+                </tr>
+                <tr class="spaceUnder">
+                    <div class="text-center justify-content-center">
+                        <a class="btn btn-outline-primary" style="height:40px;width:300px">Testing</a>
+                    </div>
+                </tr>
+                <tr>
+                    <br />
+                </tr>
+                <tr class="spaceUnder">
+                    <div class="text-center justify-content-center">
+                        <a class="btn btn-primary" asp-controller="FirstScreen" style="height:40px;width:300px">Coding</a>
+                    </div>
+                </tr>
+                <tr>
+                    <br />
+                </tr>
+                <tr class="spaceUnder">
+                    <div class="text-center justify-content-center">
+                        <a class="btn  btn-outline-primary" style="height:40px;width:300px">Documentation</a>
+                    </div>
+                </tr>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center">
+            <h1 class="display-1">Welcome</h1>
+            <p class="display-3">This is the main page of Virtual Laboratory of Software Engineering</p>
+            <br />
+            <p class="display-4">Login to continue</p>
+        </div>
+    }

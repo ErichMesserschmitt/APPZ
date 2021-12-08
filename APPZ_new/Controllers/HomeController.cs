@@ -1,4 +1,5 @@
-﻿using APPZ_new.Models;
+﻿using APPZ_new.Data;
+using APPZ_new.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,6 +12,9 @@ namespace APPZ_new.Controllers
 {
     public class HomeController : Controller
     {
+
+
+
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -27,6 +31,7 @@ namespace APPZ_new.Controllers
         {
             return View();
         }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
