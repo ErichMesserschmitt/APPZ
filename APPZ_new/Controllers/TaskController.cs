@@ -65,6 +65,7 @@ namespace APPZ_new.Controllers
             var questions = _db.Questions.ToList().FindAll(s => s.TaskId == obj.TaskId);
             var task = _db.Tasks.FirstOrDefault(s => s.Id == obj.TaskId);
             ViewBag.TaskName = task.Title;
+            ViewBag.TaskId = task.Id;
             return View("OpenedTask", questions);
         }
 
