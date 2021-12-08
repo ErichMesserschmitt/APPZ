@@ -55,7 +55,7 @@ namespace APPZ_new.Models.Initializers
                 //var userStore = new UserStore<ApplicationUser>(identityContext);
                 //var result = userStore.CreateAsync(superAdmin);
 
-                mainContext.Users.Add(new User { Name = superAdmin.UserName/*, Role = UserRole.SuperAdmin*/ });
+                mainContext.Users.Add(new User { Name = superAdmin.UserName, Role = UserRole.SuperAdmin });
                 mainContext.SaveChanges();
             }
             //identityContext.SaveChangesAsync();
@@ -81,7 +81,7 @@ namespace APPZ_new.Models.Initializers
                 //var userStore = new UserStore<ApplicationUser>(identityContext);
                 //var result = userStore.CreateAsync(admin);
 
-                mainContext.Users.Add(new User { Name = admin.UserName/*, Role = UserRole.Admin*/ });
+                mainContext.Users.Add(new User { Name = admin.UserName, Role = UserRole.Admin });
                 mainContext.SaveChanges();
             }
 
