@@ -19,8 +19,22 @@ namespace APPZ_new.Models.Initializers
 
             var mainContext = serviceProvider.GetRequiredService<AppDBContext>();
 
-            var superAdmin = GetSuperAdmin();
+            if (!identityContext.Roles.Any(r => r.Name == "Admin"))
+            {
+                identityContext.Roles.Add(new IdentityRole("Admin"));
+                identityContext.SaveChanges();
+            }
+            if (!identityContext.Roles.Any(r => r.Name == "User"))
+            {
+                identityContext.Roles.Add(new IdentityRole("User"));
+                identityContext.SaveChanges();
+            }
+            
+            var UserRole_Admin = identityContext.Roles.First(r => r.Name == "Admin");
+            var UserRole_User = identityContext.Roles.First(r => r.Name == "User");
 
+
+            var superAdmin = GetSuperAdmin();
 
             if (!identityContext.Users.Any(u => u.UserName == superAdmin.UserName))
             {
@@ -28,13 +42,23 @@ namespace APPZ_new.Models.Initializers
                 var hashed = password.HashPassword(superAdmin, _passwords[0]);
                 superAdmin.PasswordHash = hashed;
 
-                var userStore = new UserStore<ApplicationUser>(identityContext);
-                var result = userStore.CreateAsync(superAdmin);
+                identityContext.Users.Add(superAdmin);
+                identityContext.SaveChanges();
 
-                mainContext.Users.Add(new User { Name = superAdmin.UserName, Role = UserRole.SuperAdmin });
+                identityContext.UserRoles.Add(new IdentityUserRole<string>()
+                {
+                    UserId = superAdmin.Id,
+                    RoleId = UserRole_Admin.Id
+                });
+                identityContext.SaveChanges();
 
+                //var userStore = new UserStore<ApplicationUser>(identityContext);
+                //var result = userStore.CreateAsync(superAdmin);
+
+                mainContext.Users.Add(new User { Name = superAdmin.UserName/*, Role = UserRole.SuperAdmin*/ });
+                mainContext.SaveChanges();
             }
-            identityContext.SaveChangesAsync();
+            //identityContext.SaveChangesAsync();
 
             var admin = GetAdmin();
 
@@ -44,13 +68,24 @@ namespace APPZ_new.Models.Initializers
                 var hashed = password.HashPassword(admin, _passwords[1]);
                 admin.PasswordHash = hashed;
 
-                var userStore = new UserStore<ApplicationUser>(identityContext);
-                var result = userStore.CreateAsync(admin);
+                identityContext.Users.Add(admin);
+                identityContext.SaveChanges();
 
-                mainContext.Users.Add(new User { Name = admin.UserName, Role = UserRole.Admin });
+                identityContext.UserRoles.Add(new IdentityUserRole<string>()
+                {
+                    UserId = admin.Id,
+                    RoleId = UserRole_Admin.Id
+                });
+                identityContext.SaveChanges();
+
+                //var userStore = new UserStore<ApplicationUser>(identityContext);
+                //var result = userStore.CreateAsync(admin);
+
+                mainContext.Users.Add(new User { Name = admin.UserName/*, Role = UserRole.Admin*/ });
+                mainContext.SaveChanges();
             }
 
-            identityContext.SaveChangesAsync();
+            //identityContext.SaveChangesAsync();
         }
 
 

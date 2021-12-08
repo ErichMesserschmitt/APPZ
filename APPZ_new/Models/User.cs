@@ -17,7 +17,7 @@ namespace APPZ_new.Models
 
         public string Name { get; set; }
 
-        public UserRole Role { get; set; }
+        //public UserRole Role { get; set; }
 
         public virtual ICollection<UserTask> Tasks { get; set; }
 
