@@ -98,16 +98,22 @@ namespace APPZ_new.Controllers
             return View(userTask);
         }
 
-        public async Task<IActionResult> UsersTaskList()
+        public async Task<IActionResult> UsersTaskList(int? id)
         {
             string currentUserName = User.Identity.Name;
             var userId = _context.Users.Where(q => q.Name == currentUserName).Select(p => p.Id).FirstOrDefault();
             IEnumerable<UserTask> userTask = _context.UserTasks.Where(p => p.UserId == userId);
 
             IEnumerable<Models.Task> tasks = _context.Tasks.Where(p => !userTask.Select(p => p.TaskId).Contains(p.Id));
-           
+            if (id != null)
+            {
+                IEnumerable<Models.Task> taskWithSeverity = tasks.Where(p => (int)p.Severity == id);
+                return View(taskWithSeverity);
+            }
             return View(tasks);
         }
+
+        
 
         public async Task<IActionResult> UsersPassedTaskList()
         {
