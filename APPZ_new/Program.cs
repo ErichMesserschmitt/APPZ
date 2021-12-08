@@ -25,6 +25,7 @@ namespace APPZ_new
                 var identityDB = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 identityDB.Database.Migrate();
                 RoleAndUserInitializer.Initialize(scope.ServiceProvider);
+                CategoryInitializer.Initialize(scope.ServiceProvider);
             }
             host.Run();
         }
