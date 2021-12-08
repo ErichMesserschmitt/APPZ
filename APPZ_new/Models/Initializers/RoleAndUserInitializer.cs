@@ -12,7 +12,7 @@ namespace APPZ_new.Models.Initializers
 {
     public class RoleAndUserInitializer
     {
-        private static string[] _passwords = { "admin", "ivanko" };
+        private static string[] _passwords = { "admin", "ivanko", "12345" };
         public static void Initialize(IServiceProvider serviceProvider)
         {
             var identityContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
@@ -55,7 +55,7 @@ namespace APPZ_new.Models.Initializers
                 //var userStore = new UserStore<ApplicationUser>(identityContext);
                 //var result = userStore.CreateAsync(superAdmin);
 
-                mainContext.Users.Add(new User { Name = superAdmin.UserName/*, Role = UserRole.SuperAdmin*/ });
+                mainContext.Users.Add(new User { Name = superAdmin.UserName, Role = UserRole.SuperAdmin });
                 mainContext.SaveChanges();
             }
             //identityContext.SaveChangesAsync();
@@ -81,13 +81,39 @@ namespace APPZ_new.Models.Initializers
                 //var userStore = new UserStore<ApplicationUser>(identityContext);
                 //var result = userStore.CreateAsync(admin);
 
-                mainContext.Users.Add(new User { Name = admin.UserName/*, Role = UserRole.Admin*/ });
+                mainContext.Users.Add(new User { Name = admin.UserName, Role = UserRole.Admin });
+                mainContext.SaveChanges();
+            }
+
+            //identityContext.SaveChangesAsync();
+
+            var user = GetUser();
+
+            if (!identityContext.Users.Any(u => u.UserName == user.UserName))
+            {
+                var password = new PasswordHasher<ApplicationUser>();
+                var hashed = password.HashPassword(user, _passwords[2]);
+                user.PasswordHash = hashed;
+
+                identityContext.Users.Add(user);
+                identityContext.SaveChanges();
+
+                identityContext.UserRoles.Add(new IdentityUserRole<string>()
+                {
+                    UserId = user.Id,
+                    RoleId = UserRole_User.Id
+                });
+                identityContext.SaveChanges();
+
+                //var userStore = new UserStore<ApplicationUser>(identityContext);
+                //var result = userStore.CreateAsync(admin);
+
+                mainContext.Users.Add(new User { Name = user.UserName, Role = UserRole.User });
                 mainContext.SaveChanges();
             }
 
             //identityContext.SaveChangesAsync();
         }
-
 
         private static ApplicationUser GetSuperAdmin()
         {
@@ -112,6 +138,21 @@ namespace APPZ_new.Models.Initializers
                 NormalizedEmail = "ADMINIVAN@MAIL.COM",
                 UserName = "adminivan@mail.com",
                 NormalizedUserName = "ADMINIVAN@MAIL.COM",
+                PhoneNumber = "+111111111111",
+                EmailConfirmed = true,
+                PhoneNumberConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString("D")
+            };
+        }
+
+        private static ApplicationUser GetUser()
+        {
+            return new ApplicationUser
+            {
+                Email = "user@mail.com",
+                NormalizedEmail = "USER@MAIL.COM",
+                UserName = "user@mail.com",
+                NormalizedUserName = "USER@MAIL.COM",
                 PhoneNumber = "+111111111111",
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
