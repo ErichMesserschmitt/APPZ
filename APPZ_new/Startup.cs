@@ -34,7 +34,7 @@ namespace APPZ_new
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddDbContext<AppDBContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("MainDbConnection")));
+                    Configuration.GetConnectionString("MainDbConnection")), ServiceLifetime.Transient);
             services.AddControllersWithViews();
         }
 

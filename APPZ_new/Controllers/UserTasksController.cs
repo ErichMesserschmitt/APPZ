@@ -26,14 +26,12 @@ namespace APPZ_new.Controllers
 
         public async Task<IActionResult> StartTask()
         {
-            var taskId = 2;
+            var taskId = 3;
             var userId = 1;
             var task = await _context.Tasks
                 .Include(x => x.Questions)
                 .ThenInclude(x => x.Answers)
                 .FirstOrDefaultAsync(x => x.Id == taskId);
-
-            var isAlteadyCompleted = _context.UserTasks.Any(x => x.TaskId == taskId && x.UserId == userId);
 
             var questionsDto = task.Questions.Select(x => new QuestionDto
             {
@@ -75,14 +73,30 @@ namespace APPZ_new.Controllers
             return RedirectToAction(nameof(ViewResult),  result);
         }
 
+        //when user complete task
         public async Task<ActionResult> ViewResult(ResultDTO resultDto)
         {
             return View(resultDto);
         }
 
-        private bool UserTaskExists(int id)
+        //from task grid
+        public async Task<ActionResult> ViewDetailedResult()
         {
-            return _context.UserTasks.Any(e => e.Id == id);
+            int userTaskId = 16;
+            var userTask = _context.UserTasks
+                              .Include(x => x.UserAnswers)
+                              .ThenInclude(X => X.Question)
+                              .FirstOrDefault(x => x.Id == userTaskId);
+
+            //var answers = _context.Answers.Where(x => x.)
+
+            var task = _context.Tasks.FirstOrDefault(x => x.Id == userTask.TaskId);
+            return View(userTask);
         }
+
+        //private bool UserTaskExists(int id)
+        //{
+        //    return _context.UserTasks.Any(e => e.Id == id);
+        //}
     }
 }
