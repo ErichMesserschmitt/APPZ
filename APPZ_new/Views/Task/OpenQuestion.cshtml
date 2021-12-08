@@ -1,49 +1,45 @@
 ﻿@model IEnumerable<APPZ_new.Models.Answer>
 
-@{
-    ViewData["Title"] = "OpenQuestion";
-}
-<h1>@ViewBag.QuestionName</h1>
+    @{
+        ViewData["Title"] = "OpenQuestion";
+    }
 
-<p>
-    <a asp-action="CreateAnswer" asp-route-id="@ViewBag.QuestionId">Add Answer</a>
-    <br />
-    <a asp-action="OpenTask" asp-route-id="@ViewBag.TaskId">Back</a>
+    <p>
+        <a asp-action="OpenTask" asp-route-id="@ViewBag.TaskId" class="btn btn-primary mx-1">Back</a>
+    </p>
 
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.AnswerText)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsCorrect)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Question)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.AnswerText)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsCorrect)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Question.QuestionTest)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <h1>@ViewBag.QuestionName</h1>
+
+    <p>
+        <a asp-action="CreateAnswer" asp-route-id="@ViewBag.QuestionId" class="btn btn-success mx-1">Add Answer</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Answer
+                </th>
+                <th>
+                    Checked answer is correct
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AnswerText)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsCorrect)
+                    </td>
+                    
+                    <td>
+                        <a asp-action="DeleteAnswer" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

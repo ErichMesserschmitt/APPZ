@@ -91,6 +91,15 @@ namespace APPZ_new.Controllers
         {
             var question = _db.Questions.FirstOrDefault(s => s.Id == id);
             ViewBag.QuestionId = question.Id;
+            ViewBag.QuestionName = question.QuestionTest;
+            var correctAnswers = _db.Answers.ToList().FindAll(s => s.IsCorrect == true && s.QuestionId == question.Id);
+            bool correctIsPossible = true;
+            if(correctAnswers.Count > 0)
+            {
+                correctIsPossible = false;
+            }
+            ViewBag.CorrectNotPossible = !correctIsPossible;
+            ViewBag.DeleteInfo = correctIsPossible;
             Answer answer = new Answer
             {
                 QuestionId = question.Id,
@@ -98,6 +107,21 @@ namespace APPZ_new.Controllers
             };
             return View("CreateAnswer", answer);
 
+        }
+
+        public IActionResult DeleteAnswer(int? id)
+        {
+            var answer = _db.Answers.FirstOrDefault(s => s.Id == id);
+            int questionId = answer.QuestionId;
+            _db.Answers.Remove(answer);
+            _db.SaveChanges();
+
+            var question = _db.Questions.FirstOrDefault(s => s.Id == questionId);
+            var answers = _db.Answers.ToList().FindAll(s => s.QuestionId == questionId);
+            ViewBag.QuestionName = question.QuestionTest;
+            ViewBag.QuestionId = question.Id;
+            ViewBag.TaskId = question.TaskId;
+            return View("OpenQuestion", answers);
         }
         [HttpPost]
         public IActionResult CreateAnswer(Answer obj)
@@ -121,7 +145,7 @@ namespace APPZ_new.Controllers
             _db.Questions.Remove(question);
             _db.SaveChanges();
 
-            ViewBag.TaskName = "test";
+            ViewBag.TaskName = _db.Tasks.FirstOrDefault(s => s.Id == taskId).Title;
             ViewBag.TaskId = taskId;
             var questions = _db.Questions.ToList().FindAll(s => s.TaskId == taskId);
             return View("OpenedTask", questions);

@@ -3,17 +3,18 @@
 @{
     ViewData["Title"] = "CreateQuestion";
 }
-
+<p>
+    <a asp-action="OpenTask" asp-route-id="@ViewBag.DependencyId" class="btn btn-primary mx-1">Back</a>
+</p>
 <h1>Create Question</h1>
 
-<h4>Question</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="CreateQuestion">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="QuestionTest" class="control-label"></label>
+                <label asp-for="QuestionTest" class="control-label">Enter a question</label>
                 <input asp-for="QuestionTest" class="form-control" />
                 <span asp-validation-for="QuestionTest" class="text-danger"></span>
             </div>
@@ -27,7 +28,4 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 

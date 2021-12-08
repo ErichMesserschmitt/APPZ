@@ -3,19 +3,18 @@
 @{
     ViewData["Title"] = "CreateTask";
 }
-
+ <p> 
+    <a asp-action="Index" class="btn btn-primary mx-1">Back</a>
+ </p>
 <h1>@ViewBag.TaskName</h1>
-
 <p>
-    <a asp-action="CreateQuestion" asp-route-id='@ViewBag.TaskId'>Add question</a>
-    <br />
-    <a asp-action="Index">Back</a>
+    <a asp-action="CreateQuestion" asp-route-id='@ViewBag.TaskId' class="btn btn-success mx-1">Add question</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.QuestionTest)
+                Question Text
             </th>
             <th></th>
         </tr>

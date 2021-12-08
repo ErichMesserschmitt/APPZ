@@ -1,25 +1,31 @@
 ﻿@model APPZ_new.Models.Answer
 
+
+<p>
+    <a asp-action="OpenQuestion" asp-route-id="@ViewBag.QuestionId"  class="btn btn-primary mx-1">Back to Question</a>
+</p>
 @{
     ViewData["Title"] = "CreateAnswer";
 }
 
-<h1>CreateAnswer</h1>
+<h1>Answers for @ViewBag.QuestionName</h1>
 
-<h4>Answer</h4>
+<h4>Enter Answer Text</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="CreateAnswer">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="AnswerText" class="control-label"></label>
                 <input asp-for="AnswerText" class="form-control" />
                 <span asp-validation-for="AnswerText" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsCorrect" /> @Html.DisplayNameFor(model => model.IsCorrect)
+                <label class="form-check-label" hidden="@ViewBag.CorrectNotPossible">
+                    <input class="form-check-input" asp-for="IsCorrect" /> / Is this answer is correct?
+                </label>
+                <label class="form-check-label" hidden ="@ViewBag.DeleteInfo">
+                Correct answer already exist. Delete it if you want to change correct answer.    
                 </label>
             </div>
             <div class="form-group">
@@ -31,9 +37,5 @@
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="OpenQuestion" asp-route-id="@ViewBag.QuestionId">Back to Question</a>
 </div>
 
