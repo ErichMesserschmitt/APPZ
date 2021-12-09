@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Home Page";
+    Layout = "/Views/Shared/EmptyLayout.cshtml";
+}
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <h1 class="display-3 text-center">Select module</h1>
+    <div>
+        <table>
+            <tr>
+                <br />
+            </tr>
+            <tr class="spaceUnder">
+                <div class="text-center justify-content-center">
+                    <a class="btn btn-outline-primary" asp-action="UsersTaskList" asp-route-categoryId="1" style="height:40px;width:300px">.Net</a>
+                </div>
+            </tr>
+            <tr>
+                <br />
+            </tr>
+            <tr class="spaceUnder">
+                <div class="text-center justify-content-center">
+                    <a class="btn btn-outline-primary" asp-action="UsersTaskList" asp-route-categoryId="2" style="height:40px;width:300px">C++</a>
+                </div>
+            </tr>
+            <tr>
+                <br />
+            </tr>
+            <tr class="spaceUnder">
+                <div class="text-center justify-content-center">
+                    <a class="btn  btn-outline-primary" asp-action="UsersTaskList" asp-route-categoryId="3" style="height:40px;width:300px">Java</a>
+                </div>
+            </tr>
+        </table>
+    </div>
+}
+else
+{
+    <div class="text-center">
+        <h1 class="display-1">Welcome</h1>
+        <p class="display-3">This is the main page of Virtual Laboratory of Software Engineering</p>
+        <br />
+        <p class="display-4">Login to continue</p>
+    </div>
+}
