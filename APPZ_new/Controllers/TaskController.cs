@@ -7,6 +7,8 @@ using APPZ_new.Data;
 using APPZ_new.Enums;
 using Task = APPZ_new.Models.Task;
 using APPZ_new.Models;
+using Microsoft.AspNetCore.Http;
+using APPZ_new.SqlTaskModels;
 
 namespace APPZ_new.Controllers
 {
@@ -25,6 +27,8 @@ namespace APPZ_new.Controllers
             ViewBag.Questions = _db.Questions;
             return View(objList);
         }
+
+
         public IActionResult Create()
         {
             ViewBag.Category = _db.Categorys.ToList();
@@ -219,6 +223,60 @@ namespace APPZ_new.Controllers
 
             return View(obj);//нахуй можна забрати
         }
+
+        #region sql task
+        public IActionResult SqlTaskList()
+        {
+            var tasks = _db.SqlTasks;
+            return View(tasks);
+        }
+
+        [HttpGet]
+        public IActionResult CreateSqlTask()
+        {
+            ViewBag.Category = _db.Categorys;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateSqlTask(IFormCollection form)
+        {
+            var title = form["Title"];
+            var scope = form["Scope"];
+            var severity = int.Parse(form["Severity"]);
+            var categoryId = int.Parse(form["CategoryId"]);
+            var answers = new List<SqlAnswer>();
+            var task = new SqlTask
+            {
+                Title = title,
+                Scope = scope,
+                Severity = (TaskSeverity)severity,
+                CategoryId = categoryId,
+            };
+            
+            int answersCount = 0;
+            Microsoft.Extensions.Primitives.StringValues grobalyUnusedVar;
+            do
+            {
+                Microsoft.Extensions.Primitives.StringValues unusedVar;
+                answers.Add(new SqlAnswer
+                {
+                    Text = form[$"AnswerText[{answersCount}]"],
+                    IsUnUsed = form.TryGetValue($"IsNotUsed[{answersCount}]", out unusedVar),//if exist then always true
+                    Task = task,
+                    SortValue = answersCount
+                }); 
+                ++answersCount;
+            } while (form.TryGetValue($"AnswerText[{answersCount}]", out grobalyUnusedVar));
+
+            task.Answers = answers;
+
+            _db.Add(task);
+            _db.SaveChanges();
+
+            return RedirectToAction(nameof(CreateSqlTask));
+        }
+        #endregion
     }
 }
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using APPZ_new.Models;
+using APPZ_new.SqlTaskModels;
 
 namespace APPZ_new.Data
 {
@@ -18,7 +19,12 @@ namespace APPZ_new.Data
         public DbSet<Models.Task> Tasks { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserTask> UserTasks { get; set; }
+        public DbSet<SqlUserTask> SqlUserTasks { get; set; }
 
+        #region sql tasks
+        public DbSet<SqlTask> SqlTasks { get; set; }
+        public DbSet<SqlAnswer> SqlAnswers { get; set; }
+        #endregion
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
