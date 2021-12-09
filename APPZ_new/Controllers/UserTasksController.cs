@@ -25,6 +25,11 @@ namespace APPZ_new.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> ChooseCategory()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> StartTask(int id)
         {
             string currentUserName = User.Identity.Name;
@@ -58,6 +63,7 @@ namespace APPZ_new.Controllers
             var answerIds = Array.ConvertAll(answerIdsStr, id => int.Parse(id));
 
             var answers = _context.Answers.Where(x => answerIds.Contains(x.Id));
+
             var result = new ResultDTO
             {
                 TaskId = taskId,
@@ -98,19 +104,16 @@ namespace APPZ_new.Controllers
             return View(userTask);
         }
 
-        public async Task<IActionResult> UsersTaskList(int? id)
+        public async Task<IActionResult> UsersTaskList(int? categoryId)
         {
             string currentUserName = User.Identity.Name;
             var userId = _context.Users.Where(q => q.Name == currentUserName).Select(p => p.Id).FirstOrDefault();
             IEnumerable<UserTask> userTask = _context.UserTasks.Where(p => p.UserId == userId);
 
-            IEnumerable<Models.Task> tasks = _context.Tasks.Where(p => !userTask.Select(p => p.TaskId).Contains(p.Id));
-            if (id != null)
-            {
-                IEnumerable<Models.Task> taskWithSeverity = tasks.Where(p => (int)p.Severity == id);
-                return View(taskWithSeverity);
-            }
-            return View(tasks);
+            var tasks = _context.Tasks.Where(p => !userTask.Select(p => p.TaskId).Contains(p.Id)).OrderBy(x => x.Severity);
+
+            var categoryTask = tasks.Where(p => p.CategoryId == categoryId);
+            return View(categoryTask);
         }
 
         
@@ -121,6 +124,8 @@ namespace APPZ_new.Controllers
             IEnumerable<UserTask> userTask = _context.UserTasks;
             IEnumerable<Models.User> user = _context.Users;
             IEnumerable<Models.Task> tasks = _context.Tasks;
+
+
             var passedTask = tasks.Join(userTask, p => p.Id, q => q.TaskId,
                 (p, q) => new
                 {
