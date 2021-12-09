@@ -39,7 +39,7 @@ namespace APPZ_new.Controllers
 
             if (user.Role == UserRole.User)
             {
-                return RedirectToAction("UsersTaskList", "UserTasks");
+                return RedirectToAction("ChooseCategory", "UserTasks");
             }
             return RedirectToAction("Index", "Task");
         }
