@@ -92,7 +92,7 @@ namespace APPZ_new.Controllers
                               .ThenInclude(X => X.Question)
                               .FirstOrDefault(x => x.Id == userTaskId);
 
-            //var answers = _context.Answers.Where(x => x.)
+          
 
             var task = _context.Tasks.FirstOrDefault(x => x.Id == userTask.TaskId);
             return View(userTask);

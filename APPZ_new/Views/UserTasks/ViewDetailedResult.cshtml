@@ -5,7 +5,7 @@
 }
 
 <div>
-    <h4>UserTask</h4>
+   
     <hr />
     <h1>@Html.DisplayFor(model => model.Task.Title)</h1>
     <h3>
@@ -30,5 +30,7 @@
     }
 </div>
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="UsersTaskList" asp-controller="UserTasks">Back to Tasks</a>
+    <br />
+    <a asp-action="UsersPassedTaskList" asp-controller="UserTasks">Back to Passed Tasks</a>
 </div>
