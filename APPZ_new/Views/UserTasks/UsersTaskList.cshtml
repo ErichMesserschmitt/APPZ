@@ -2,13 +2,26 @@
 
 <div class="container p-3">
     <div class="row pt-4">
-        <div class="col-6">
+        <div class="col-4">
             <h2 class="text-primary">Users Tasks List</h2>
         </div>
-        <div class="col-6 text-right">
-            <a asp-controller="UserTasks" asp-action="UsersPassedTaskList" class="btn btn-primary">Show Passed Test</a>
+        <div class="col-4">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    Order by
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a asp-controller="UserTasks" asp-action="UsersTaskList" asp-route-id="0" >Low</a></li>
+                    <li><a asp-controller="UserTasks" asp-action="UsersTaskList" asp-route-id="1" >Middle</a></li>
+                    <li><a asp-controller="UserTasks" asp-action="UsersTaskList" asp-route-id="2">Hard</a></li>
+                    <li><a asp-controller="UserTasks" asp-action="UsersTaskList" asp-route-id=null>All</a></li>
+                </ul>
+            </div>
+            </div>
+            <div class="col-4 text-right">
+                <a asp-controller="UserTasks" asp-action="UsersPassedTaskList" class="btn btn-primary">Show Passed Test</a>
+            </div>
         </div>
-    </div>
     <br />
     @if (Model.Count() > 0)
     {
@@ -42,8 +55,4 @@
     {
         <p>No items created yet </p>
     }
-</div>
-
-</div>
-<br/>
 </div>

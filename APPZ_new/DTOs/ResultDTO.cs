@@ -1,4 +1,5 @@
-﻿using System;
+﻿using APPZ_new.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,6 +14,8 @@ namespace APPZ_new.DTOs
 
         public int Mark { get
             {
+                if (TotalQuestionsCount == 0)
+                    return 0;
                 return (int)((double)(10 / TotalQuestionsCount) * CorrectAnswersCount);
             } 
         }

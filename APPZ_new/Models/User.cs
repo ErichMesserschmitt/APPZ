@@ -1,4 +1,5 @@
 ﻿using APPZ_new.Enums;
+using APPZ_new.SqlTaskModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -21,9 +22,14 @@ namespace APPZ_new.Models
 
         public virtual ICollection<UserTask> Tasks { get; set; }
 
+        public virtual ICollection<SqlUserTask> SqlTasks { get; set; }
+
+
         public User()
         {
             Tasks = new HashSet<UserTask>();
+            SqlTasks = new HashSet<SqlUserTask>();
+
         }
     }
 }

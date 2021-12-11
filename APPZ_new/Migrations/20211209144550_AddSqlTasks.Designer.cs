@@ -3,14 +3,16 @@ using APPZ_new.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace APPZ_new.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20211209144550_AddSqlTasks")]
+    partial class AddSqlTasks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -253,21 +255,6 @@ namespace APPZ_new.Migrations
                     b.ToTable("AnswerUserTask");
                 });
 
-            modelBuilder.Entity("SqlAnswerSqlUserTask", b =>
-                {
-                    b.Property<int>("SqlAnswersId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserTasksId")
-                        .HasColumnType("int");
-
-                    b.HasKey("SqlAnswersId", "UserTasksId");
-
-                    b.HasIndex("UserTasksId");
-
-                    b.ToTable("SqlAnswerSqlUserTask");
-                });
-
             modelBuilder.Entity("APPZ_new.Models.Answer", b =>
                 {
                     b.HasOne("APPZ_new.Models.Question", "Question")
@@ -370,21 +357,6 @@ namespace APPZ_new.Migrations
                         .IsRequired();
 
                     b.HasOne("APPZ_new.Models.UserTask", null)
-                        .WithMany()
-                        .HasForeignKey("UserTasksId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("SqlAnswerSqlUserTask", b =>
-                {
-                    b.HasOne("APPZ_new.SqlTaskModels.SqlAnswer", null)
-                        .WithMany()
-                        .HasForeignKey("SqlAnswersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("APPZ_new.SqlTaskModels.SqlUserTask", null)
                         .WithMany()
                         .HasForeignKey("UserTasksId")
                         .OnDelete(DeleteBehavior.Cascade)

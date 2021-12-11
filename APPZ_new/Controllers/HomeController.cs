@@ -1,4 +1,5 @@
 ﻿using APPZ_new.Data;
+using APPZ_new.Enums;
 using APPZ_new.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,15 +17,31 @@ namespace APPZ_new.Controllers
 
 
         private readonly ILogger<HomeController> _logger;
+        private readonly AppDBContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(
+            ILogger<HomeController> logger, 
+            AppDBContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult RedirectToAria()
+        {
+            string currentUserName = User.Identity.Name;
+            var user = _context.Users.Where(q => q.Name == currentUserName).FirstOrDefault();
+
+            if (user.Role == UserRole.User)
+            {
+                return RedirectToAction("ChooseCategory", "UserTasks");
+            }
+            return RedirectToAction("Index", "Task");
         }
 
         public IActionResult Privacy()
