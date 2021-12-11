@@ -54,6 +54,19 @@ namespace APPZ_new.Controllers
             return View(dto);
         }
 
+        public async Task<IActionResult> StartTaskNew(int id)
+        {
+            string currentUserName = User.Identity.Name;
+            IEnumerable<Models.User> user = _context.Users;
+            var taskId = id;
+            var userId = user.Where(q => q.Name == currentUserName).Select(p => p.Id).FirstOrDefault();
+            var task = await _context.SqlTasks
+                .Include(x => x.Answers)
+                .FirstOrDefaultAsync(x => x.Id == taskId);
+
+            return View(task);
+        }
+
         public async Task<ActionResult> CompleteTask(IFormCollection form)
         {
             string currentUserName = User.Identity.Name;
@@ -116,8 +129,12 @@ namespace APPZ_new.Controllers
             return View(categoryTask);
         }
 
-        
 
+        public IActionResult UsersTaskListNew()
+        {
+            var tasks = _context.SqlTasks;
+            return View(tasks);
+        }
         public async Task<IActionResult> UsersPassedTaskList()
         {
             string currentUserName = User.Identity.Name;
