@@ -1,0 +1,54 @@
+﻿@model IEnumerable<APPZ_new.SqlTaskModels.SqlTask>
+
+@{
+    ViewData["Title"] = "SqlTaskList";
+}
+
+<h1>SqlTaskList</h1>
+
+<p>
+    <a asp-action="CreateSqlTask">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Scope)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Severity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Scope)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Severity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Title)
+                </td>
+                <td width="30%">
+                    <div class="w-100 btn-group" role="group">
+                        <a asp-controller="UserTasks" asp-action="StartTaskNew" asp-route-Id="@item.Id" class="btn btn-success mx-1">Pass test</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

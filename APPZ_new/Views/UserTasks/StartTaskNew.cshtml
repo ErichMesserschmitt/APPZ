@@ -1,0 +1,59 @@
+﻿@model APPZ_new.SqlTaskModels.SqlTask
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+<h4>Task</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        @*<form asp-action="CompleteTask">*@
+        <form>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <h2>@Html.DisplayFor(item => item.Title)</h2>
+
+            <table id="submissionTable" class="arrowes-table table-striped" box-shadow="0 0 20px rgba(0, 0, 0, 0.15)">
+                <thead>
+                    <tr>
+
+                        <td>Drag and drop in correct order</td>
+                        <td><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Cross_red_circle.svg/2048px-Cross_red_circle.svg.png" width="20" height="20"/></td>
+                    </tr>
+                </thead>
+                <tbody class="row_drag">
+                    @foreach (var item in Model.Answers)
+                    {
+                        <tr>
+                            <td width="1000">
+                                <h4>@Html.DisplayFor(model => item.Text)</h4>
+                            </td>
+                            <td>
+                                <input type="checkbox" class="text-box single-line" name="IsNotUsed[0]" value="" />
+                            </td>
+                        </tr>
+                    }
+                 </tbody>
+            </table>
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Submit answer" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(".row_drag").sortable({
+        delay: 100,
+        stop: function () {
+            var selectedRow = new Array();
+            $('.row_drag>tr').each(function () {
+                selectedRow.push($(this).attr("id"));
+            });
+        }
+    });
+</script>
+
+
