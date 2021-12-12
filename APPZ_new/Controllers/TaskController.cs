@@ -324,33 +324,40 @@ namespace APPZ_new.Controllers
                 Severity = (TaskSeverity)severity,
                 CategoryId = categoryId,
             };
-
-            int answersCount = 0;
-            Microsoft.Extensions.Primitives.StringValues grobalyUnusedVar;
-            do
+            var testList = form.Keys.ToList().FindAll(s => s.StartsWith("Id["));
+            bool isCorrect = true;
+            int previousSortId = -1;
+            foreach (var item in testList)
             {
+                int answersCount = 0;
+                Microsoft.Extensions.Primitives.StringValues unuusedVar;
+                var tempid = item.Remove(0, 3);
+                tempid = tempid.Remove(tempid.Length - 1, 1);
+                var isUnUsed = form.TryGetValue($"IsNotUsed[{tempid}]", out unuusedVar);
                 Microsoft.Extensions.Primitives.StringValues unusedVar;
                 answers.Add(new SqlAnswer
                 {
-                    Text = form[$"AnswerText[{answersCount}]"],
-                    IsUnUsed = form.TryGetValue($"IsNotUsed[{answersCount}]", out unusedVar),//if exist then always true
+
+                    Id = 0,
+                    Text = form[$"AnswerText[{tempid}]"],
+                    IsUnUsed = form.TryGetValue($"IsNotUsed[{tempid}]", out unusedVar),//if exist then always true
                     Task = task,
                     SortValue = answersCount
                 });
                 ++answersCount;
-            } while (form.TryGetValue($"AnswerText[{answersCount}]", out grobalyUnusedVar));
+            }
 
+            var obj = _db.SqlTasks.FirstOrDefault(s => s.Id == id);
             //AddRange чомусь не працює( говнокод який це обійшов:
-            task.Answers = answers;
-            foreach (var item in answers)
+            var ans = _db.SqlAnswers.ToList().FindAll(s => s.SqlTaskId == id);
+            foreach (var item in ans)
             {
-                _db.SqlAnswers.Add(item);
+                _db.SqlAnswers.Remove(item);
                 _db.SaveChanges();
             }
-                
+            task.Answers = answers;          
 
             //update is not working for some reason so we remove old entry first
-            var obj = _db.SqlTasks.FirstOrDefault(s => s.Id == id);
             _db.SqlTasks.Remove(obj);
             _db.SaveChanges();
             //sorry for govnokod
