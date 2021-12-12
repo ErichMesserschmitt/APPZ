@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using APPZ_new.Enums;
 using Microsoft.CodeAnalysis.CSharp;
 using TaskStatus = APPZ_new.Enums.TaskStatus;
+using APPZ_new.SqlTaskModels;
 
 namespace APPZ_new.Controllers
 {
@@ -98,9 +99,77 @@ namespace APPZ_new.Controllers
             _context.SaveChanges();
             return RedirectToAction(nameof(ViewResult),  result);
         }
+        public async Task<ActionResult> CompleteSqlTask(IFormCollection form)
+        {
+            var answers = new List<SqlAnswer>();
+            var taskId = form["Id"];
 
-        //when user complete task
-        public async Task<ActionResult> ViewResult(ResultDTO resultDto)
+            string currentUserName = User.Identity.Name;
+            var userId = _context.Users.Where(q => q.Name == currentUserName).Select(p => p.Id).FirstOrDefault();
+
+            var userTask = new SqlUserTask
+            {
+                TaskId = int.Parse(taskId),
+                UserId = userId,
+                Id = 0,
+        };
+
+
+
+            var testList = form.Keys.ToList().FindAll(s => s.StartsWith("Id["));
+            bool isCorrect = true;
+            int previousSortId = -1;
+            foreach(var item in testList)
+            {
+                Microsoft.Extensions.Primitives.StringValues unuusedVar;
+                var tempid = item.Remove(0, 3);
+                tempid = tempid.Remove(tempid.Length - 1, 1);
+                var isUnUsed = form.TryGetValue($"IsNotUsed[{tempid}]", out unuusedVar);
+                var answer = _context.SqlAnswers.FirstOrDefault(s => s.Id == int.Parse(tempid));
+                if (answer.IsUnUsed != isUnUsed)
+                {
+                    isCorrect = false;
+                }
+                if (answer.SortValue < previousSortId && !answer.IsUnUsed && !isUnUsed)
+                {
+                    isCorrect = false;
+                } else
+                {
+                    if(!answer.IsUnUsed)
+                    previousSortId = answer.SortValue;
+                }
+               
+                answers.Add(answer);
+
+            }
+            if (isCorrect)
+            {
+                userTask.Mark = 10;
+                //switch (_context.SqlTasks.FirstOrDefault(s => s.Id == taskId).Severity)
+                //{
+                //    case TaskSeverity.Hard:
+                        
+                //        break;
+                //    case TaskSeverity.Medium:
+                //        userTask.Mark = 5;
+                //        break;
+                //    case TaskSeverity.Low:
+                //        userTask.Mark = 2;
+                //        break;
+                //}
+            } else
+            {
+                userTask.Mark = 0;
+            }
+
+            _context.Add(userTask);
+            _context.SaveChanges();
+
+            return RedirectToAction("SqlTaskList");
+        }
+
+            //when user complete task
+            public async Task<ActionResult> ViewResult(ResultDTO resultDto)
         {
             return View(resultDto);
         }
