@@ -5,6 +5,9 @@
     ViewData["Id"] = Model.Id;
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="~/Scripts/jquery-1.4.1.js" type="text/javascript"></script>
+<script language="javascript" type="text/javascript" src="~/Scripts/jquery-1.4.1.js">
+</script>
 
 <h1>Edit Task</h1>
 
@@ -58,27 +61,31 @@
                             </tr>
                         </thead>
 
-                        @for (int i = 0; i < Model.Answers.Count; ++i)
+                        @foreach (var item in Model.Answers)
                         {
                     <tr>
                         <td width="1000">
-                            <input class="text-box single-line" name="AnswerText[i]" type="text" value="@Html.DisplayFor(model => Model.Answers.ElementAt(i).Text)" required="required" />
+                            <input type="hidden" name="Id[@item.Id]" />
+                            <input class="text-box single-line" name="AnswerText[@item.Id]" type="text" value="@Html.DisplayFor(model => item.Text)" required="required" />
                         </td>
                         <td>
-                            @if (Model.Answers.ElementAt(i).IsUnUsed)
+                            @if (item.IsUnUsed)
                             {
-                                <input type="checkbox" class="text-box single-line" name="IsNotUsed[i]" type="text" checked />
+                                <input type="checkbox" class="text-box single-line" name="IsNotUsed[@item.Id]" value="" checked />
                             }
                             else
                             {
-                                <input type="checkbox" class="text-box single-line" name="IsNotUsed[i]" type="text" value="" />
+                                <input type="checkbox" class="text-box single-line" name="IsNotUsed[@item.Id]" value=""/>
                             }
+
                         </td>
                         <td>
-                            <button type="button" class="btn btn-primary" onclick="removeTr(i);">Delete</button>
+                            <button type="button" class="btn btn-primary" onclick="removeTr(0);">Delete</button>
                         </td>
                     </tr>
                         }
+
+
 
                     </table>
                     <p>
@@ -99,31 +106,15 @@
 </div>
 
 <script type="text/javascript">
-    var counter = 0;
-    var i = 0;
-    window.onload = function () {
-        for (i = 0; i < @Html.Raw(Model.Answers.Count()); ++i)
-        {
-            $('<tr id="tablerow' + counter + '"><td>' +
-                '<input type="text" class="text-box single-line" name="AnswerText[' + counter + ']" value="" required="required" />' +
-                '</td>' +
-                '<td>' +
-                '<input type="checkbox" class="text-box single-line" name="IsNotUsed[' + counter + ']" value="" />' +
-                '</td>' +
-                '<td>' +
-                '<button type="button" class="btn btn-primary" onclick="removeTr(' + counter + ');">Delete</button>' +
-                '</td>' +
-                '</tr>').appendTo('#submissionTable');
-        }
-        ++counter;
-    }
+    var counter = 1;
     $(function () {
         $('#add').click(function () {
             $('<tr id="tablerow' + counter + '"><td>' +
-                '<input type="text" class="text-box single-line" name="AnswerText[' + counter + ']" value="" required="required" />' +
+                '<input type="hidden" name="Id[' + (0 - counter) + ']" />' +
+                '<input type="text" class="text-box single-line" name="AnswerText[' + (0 - counter) + ']" value="" required="required" />' +
                 '</td>' +
                 '<td>' +
-                '<input type="checkbox" class="text-box single-line" name="IsNotUsed[' + counter + ']" value="" />' +
+                '<input type="checkbox" class="text-box single-line" name="IsNotUsed[' + (0 - counter) + ']" value="" />' +
                 '</td>' +
                 '<td>' +
                 '<button type="button" class="btn btn-primary" onclick="removeTr(' + counter + ');">Delete</button>' +
