@@ -46,6 +46,17 @@ namespace APPZ_new.Controllers
         }
 
         [HttpGet]
+        public IActionResult OpenSqlTask(int? id)
+        {
+            var questions = _db.SqlAnswers.ToList().FindAll(s => s.SqlTaskId == id);
+            var task = _db.SqlTasks.FirstOrDefault(s => s.Id == id);
+            ViewBag.TaskName = task.Title;
+            ViewBag.TaskId = task.Id;
+            task.Answers = questions;
+            return View("OpenedTaskNew", task);
+        }
+
+        [HttpGet]
         public IActionResult CreateQuestion(int? id)
         {
             var task = _db.Tasks.FirstOrDefault(s => s.Id == id);
@@ -313,11 +324,6 @@ namespace APPZ_new.Controllers
                 Severity = (TaskSeverity)severity,
                 CategoryId = categoryId,
             };
-            //update is not working for some reason so we remove old entry first
-            var obj = _db.SqlTasks.FirstOrDefault(s => s.Id == id);
-            _db.SqlTasks.Remove(obj);
-            _db.SaveChanges();
-            //sorry for govnokod
 
             int answersCount = 0;
             Microsoft.Extensions.Primitives.StringValues grobalyUnusedVar;
@@ -334,9 +340,22 @@ namespace APPZ_new.Controllers
                 ++answersCount;
             } while (form.TryGetValue($"AnswerText[{answersCount}]", out grobalyUnusedVar));
 
+            //AddRange чомусь не працює( говнокод який це обійшов:
             task.Answers = answers;
+            foreach (var item in answers)
+            {
+                _db.SqlAnswers.Add(item);
+                _db.SaveChanges();
+            }
+                
 
-            _db.SqlTasks.Update(task);
+            //update is not working for some reason so we remove old entry first
+            var obj = _db.SqlTasks.FirstOrDefault(s => s.Id == id);
+            _db.SqlTasks.Remove(obj);
+            _db.SaveChanges();
+            //sorry for govnokod
+
+            _db.SqlTasks.Add(task);
             _db.SaveChanges();
 
             return RedirectToAction("SqlTaskList");

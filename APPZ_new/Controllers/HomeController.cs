@@ -41,7 +41,7 @@ namespace APPZ_new.Controllers
             {
                 return RedirectToAction("ChooseCategory", "UserTasks");
             }
-            return RedirectToAction("Index", "Task");
+            return RedirectToAction("SqlTaskList", "Task");
         }
 
         public IActionResult Privacy()

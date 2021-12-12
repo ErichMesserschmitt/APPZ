@@ -58,16 +58,26 @@
                             </tr>
                         </thead>
 
-                        @foreach (var item in Model.Answers)
+                        @for (int i = 0; i < Model.Answers.Count; ++i)
                         {
-                            <tr>
-                                <td width="1000">
-                                    <h4>@Html.DisplayFor(model => item.Text)</h4>
-                                </td>
-                                <td>
-                                    <input type="checkbox" class="text-box single-line" name="IsNotUsed[0]" value="" />
-                                </td>
-                            </tr>
+                    <tr>
+                        <td width="1000">
+                            <input class="text-box single-line" name="AnswerText[i]" type="text" value="@Html.DisplayFor(model => Model.Answers.ElementAt(i).Text)" required="required" />
+                        </td>
+                        <td>
+                            @if (Model.Answers.ElementAt(i).IsUnUsed)
+                            {
+                                <input type="checkbox" class="text-box single-line" name="IsNotUsed[i]" type="text" checked />
+                            }
+                            else
+                            {
+                                <input type="checkbox" class="text-box single-line" name="IsNotUsed[i]" type="text" value="" />
+                            }
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-primary" onclick="removeTr(i);">Delete</button>
+                        </td>
+                    </tr>
                         }
 
                     </table>
@@ -89,7 +99,24 @@
 </div>
 
 <script type="text/javascript">
-    var counter = 1;
+    var counter = 0;
+    var i = 0;
+    window.onload = function () {
+        for (i = 0; i < @Html.Raw(Model.Answers.Count()); ++i)
+        {
+            $('<tr id="tablerow' + counter + '"><td>' +
+                '<input type="text" class="text-box single-line" name="AnswerText[' + counter + ']" value="" required="required" />' +
+                '</td>' +
+                '<td>' +
+                '<input type="checkbox" class="text-box single-line" name="IsNotUsed[' + counter + ']" value="" />' +
+                '</td>' +
+                '<td>' +
+                '<button type="button" class="btn btn-primary" onclick="removeTr(' + counter + ');">Delete</button>' +
+                '</td>' +
+                '</tr>').appendTo('#submissionTable');
+        }
+        ++counter;
+    }
     $(function () {
         $('#add').click(function () {
             $('<tr id="tablerow' + counter + '"><td>' +

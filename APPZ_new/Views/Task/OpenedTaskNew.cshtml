@@ -1,0 +1,27 @@
+﻿@model APPZ_new.SqlTaskModels.SqlTask
+
+@{
+    ViewData["Title"] = "CreateTask";
+}
+<p>
+    <a asp-action="SqlTaskList" class="btn btn-primary mx-1">Back</a>
+</p>
+<h1>@ViewBag.TaskName</h1>
+
+<table id="submissionTable" class="arrowes-table table-striped" box-shadow="0 0 20px rgba(0, 0, 0, 0.15)">
+    <tbody class="row_drag">
+        @foreach (var item in Model.Answers)
+        {
+            <tr>
+                <td width="1000">
+                    <h4>@Html.DisplayFor(model => item.Text)</h4>
+                </td>
+                <td>
+                    <h4>@Html.DisplayFor(model => item.IsUnUsed)</h4>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
