@@ -46,6 +46,17 @@ namespace APPZ_new.Controllers
         }
 
         [HttpGet]
+        public IActionResult OpenSqlTask(int? id)
+        {
+            var questions = _db.SqlAnswers.ToList().FindAll(s => s.SqlTaskId == id);
+            var task = _db.SqlTasks.FirstOrDefault(s => s.Id == id);
+            ViewBag.TaskName = task.Title;
+            ViewBag.TaskId = task.Id;
+            task.Answers = questions;
+            return View("OpenedTaskNew", task);
+        }
+
+        [HttpGet]
         public IActionResult CreateQuestion(int? id)
         {
             var task = _db.Tasks.FirstOrDefault(s => s.Id == id);
@@ -178,6 +189,19 @@ namespace APPZ_new.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
+        public IActionResult DeleteTaskNew(int? id)
+        {
+            var obj = _db.SqlTasks.Find(id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            _db.SqlTasks.Remove(obj);
+            _db.SaveChanges();
+            return RedirectToAction("SqlTaskList");
+        }
+
         public IActionResult Delete(int? id)
         {
             if (id == null || id == 0)
@@ -274,9 +298,68 @@ namespace APPZ_new.Controllers
             _db.Add(task);
             _db.SaveChanges();
 
-            return RedirectToAction(nameof(CreateSqlTask));
+            return RedirectToAction("SqlTaskList");
         }
         #endregion
+
+        public async Task<IActionResult> LoadTaskNewToEdit(int id)
+        {
+            var data = _db.SqlTasks.FirstOrDefault(s => s.Id == id);
+            data.Answers = _db.SqlAnswers.ToList().FindAll(s => s.SqlTaskId == id);
+            ViewBag.Category = _db.Categorys.ToList();
+            return View(data);
+        }
+        [HttpPost]
+        public IActionResult EditSqlTask(int id, IFormCollection form)
+        {
+            var title = form["Title"];
+            var scope = form["Scope"];
+            var severity = int.Parse(form["Severity"]);
+            var categoryId = int.Parse(form["CategoryId"]);
+            var answers = new List<SqlAnswer>();
+            var task = new SqlTask
+            {
+                Title = title,
+                Scope = scope,
+                Severity = (TaskSeverity)severity,
+                CategoryId = categoryId,
+            };
+
+            int answersCount = 0;
+            Microsoft.Extensions.Primitives.StringValues grobalyUnusedVar;
+            do
+            {
+                Microsoft.Extensions.Primitives.StringValues unusedVar;
+                answers.Add(new SqlAnswer
+                {
+                    Text = form[$"AnswerText[{answersCount}]"],
+                    IsUnUsed = form.TryGetValue($"IsNotUsed[{answersCount}]", out unusedVar),//if exist then always true
+                    Task = task,
+                    SortValue = answersCount
+                });
+                ++answersCount;
+            } while (form.TryGetValue($"AnswerText[{answersCount}]", out grobalyUnusedVar));
+
+            //AddRange чомусь не працює( говнокод який це обійшов:
+            task.Answers = answers;
+            foreach (var item in answers)
+            {
+                _db.SqlAnswers.Add(item);
+                _db.SaveChanges();
+            }
+                
+
+            //update is not working for some reason so we remove old entry first
+            var obj = _db.SqlTasks.FirstOrDefault(s => s.Id == id);
+            _db.SqlTasks.Remove(obj);
+            _db.SaveChanges();
+            //sorry for govnokod
+
+            _db.SqlTasks.Add(task);
+            _db.SaveChanges();
+
+            return RedirectToAction("SqlTaskList");
+        }
     }
 }
 

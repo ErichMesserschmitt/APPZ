@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using APPZ_new.Enums;
 using Microsoft.CodeAnalysis.CSharp;
 using TaskStatus = APPZ_new.Enums.TaskStatus;
+using APPZ_new.SqlTaskModels;
 
 namespace APPZ_new.Controllers
 {
@@ -54,6 +55,22 @@ namespace APPZ_new.Controllers
             return View(dto);
         }
 
+        public async Task<IActionResult> StartTaskNew(int id)
+        {
+            string currentUserName = User.Identity.Name;
+            IEnumerable<Models.User> user = _context.Users;
+            var taskId = id;
+            var userId = user.Where(q => q.Name == currentUserName).Select(p => p.Id).FirstOrDefault();
+            var task = await _context.SqlTasks
+                .Include(x => x.Answers)
+                .FirstOrDefaultAsync(x => x.Id == taskId);
+            var answers = task.Answers;
+            var rnd = new Random();
+            var randomizedList = answers.OrderBy(s => rnd.Next());
+            task.Answers = randomizedList.ToList();
+            return View(task);
+        }
+
         public async Task<ActionResult> CompleteTask(IFormCollection form)
         {
             string currentUserName = User.Identity.Name;
@@ -82,9 +99,77 @@ namespace APPZ_new.Controllers
             _context.SaveChanges();
             return RedirectToAction(nameof(ViewResult),  result);
         }
+        public async Task<ActionResult> CompleteSqlTask(IFormCollection form)
+        {
+            var answers = new List<SqlAnswer>();
+            var taskId = form["Id"];
 
-        //when user complete task
-        public async Task<ActionResult> ViewResult(ResultDTO resultDto)
+            string currentUserName = User.Identity.Name;
+            var userId = _context.Users.Where(q => q.Name == currentUserName).Select(p => p.Id).FirstOrDefault();
+
+            var userTask = new SqlUserTask
+            {
+                TaskId = int.Parse(taskId),
+                UserId = userId,
+                Id = 0,
+        };
+
+
+
+            var testList = form.Keys.ToList().FindAll(s => s.StartsWith("Id["));
+            bool isCorrect = true;
+            int previousSortId = -1;
+            foreach(var item in testList)
+            {
+                Microsoft.Extensions.Primitives.StringValues unuusedVar;
+                var tempid = item.Remove(0, 3);
+                tempid = tempid.Remove(tempid.Length - 1, 1);
+                var isUnUsed = form.TryGetValue($"IsNotUsed[{tempid}]", out unuusedVar);
+                var answer = _context.SqlAnswers.FirstOrDefault(s => s.Id == int.Parse(tempid));
+                if (answer.IsUnUsed != isUnUsed)
+                {
+                    isCorrect = false;
+                }
+                if (answer.SortValue < previousSortId && !answer.IsUnUsed && !isUnUsed)
+                {
+                    isCorrect = false;
+                } else
+                {
+                    if(!answer.IsUnUsed)
+                    previousSortId = answer.SortValue;
+                }
+               
+                answers.Add(answer);
+
+            }
+            if (isCorrect)
+            {
+                userTask.Mark = 10;
+                //switch (_context.SqlTasks.FirstOrDefault(s => s.Id == taskId).Severity)
+                //{
+                //    case TaskSeverity.Hard:
+                        
+                //        break;
+                //    case TaskSeverity.Medium:
+                //        userTask.Mark = 5;
+                //        break;
+                //    case TaskSeverity.Low:
+                //        userTask.Mark = 2;
+                //        break;
+                //}
+            } else
+            {
+                userTask.Mark = 0;
+            }
+
+            _context.Add(userTask);
+            _context.SaveChanges();
+
+            return RedirectToAction("SqlTaskList");
+        }
+
+            //when user complete task
+            public async Task<ActionResult> ViewResult(ResultDTO resultDto)
         {
             return View(resultDto);
         }
@@ -116,8 +201,12 @@ namespace APPZ_new.Controllers
             return View(categoryTask);
         }
 
-        
 
+        public IActionResult UsersTaskListNew()
+        {
+            var tasks = _context.SqlTasks;
+            return View(tasks);
+        }
         public async Task<IActionResult> UsersPassedTaskList()
         {
             string currentUserName = User.Identity.Name;
