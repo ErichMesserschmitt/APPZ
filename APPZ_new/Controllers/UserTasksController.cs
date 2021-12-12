@@ -63,7 +63,10 @@ namespace APPZ_new.Controllers
             var task = await _context.SqlTasks
                 .Include(x => x.Answers)
                 .FirstOrDefaultAsync(x => x.Id == taskId);
-
+            var answers = task.Answers;
+            var rnd = new Random();
+            var randomizedList = answers.OrderBy(s => rnd.Next());
+            task.Answers = randomizedList.ToList();
             return View(task);
         }
 
