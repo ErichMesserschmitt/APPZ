@@ -1,0 +1,116 @@
+﻿@model APPZ_new.SqlTaskModels.SqlTask
+
+@{
+    ViewData["Title"] = "EditSqlTask";
+    ViewData["Id"] = Model.Id;
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<h1>Edit Task</h1>
+
+<h4>SqlTask</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="EditSqlTask">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Scope" class="control-label"></label>
+                <input asp-for="Scope" class="form-control" />
+                <span asp-validation-for="Scope" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Severity" class="control-label"></label>
+                <select asp-for="Severity" class="form-control">
+                    <option value="">Please select</option>
+                    <option value=0>Low</option>
+                    <option value=1>Medium</option>
+                    <option value=2>Hard</option>
+                </select>
+                <span asp-validation-for="Severity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" class="form-control">
+                    <option value="">Please select</option>
+                    @foreach (var category in ViewBag.Category)
+                    {
+                        <option value=@category.Id>@category.Title</option>
+                    }
+                </select>
+            </div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group">
+                <fieldset>
+                    <legend>Sample submission</legend>
+                    <table id="submissionTable" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <td>Answer</td>
+                                <td>Is not used</td>
+                                <td></td>
+                            </tr>
+                        </thead>
+
+                        @foreach (var item in Model.Answers)
+                        {
+                            <tr>
+                                <td width="1000">
+                                    <h4>@Html.DisplayFor(model => item.Text)</h4>
+                                </td>
+                                <td>
+                                    <input type="checkbox" class="text-box single-line" name="IsNotUsed[0]" value="" />
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+                    <p>
+                        <button id="add" type="button" class="btn btn-primary">Add</button>
+                    </p>
+                    <hr />
+                </fieldset>
+                <div class="form-group">
+                    <input type="submit" value="Edit" class="btn btn-primary" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<script type="text/javascript">
+    var counter = 1;
+    $(function () {
+        $('#add').click(function () {
+            $('<tr id="tablerow' + counter + '"><td>' +
+                '<input type="text" class="text-box single-line" name="AnswerText[' + counter + ']" value="" required="required" />' +
+                '</td>' +
+                '<td>' +
+                '<input type="checkbox" class="text-box single-line" name="IsNotUsed[' + counter + ']" value="" />' +
+                '</td>' +
+                '<td>' +
+                '<button type="button" class="btn btn-primary" onclick="removeTr(' + counter + ');">Delete</button>' +
+                '</td>' +
+                '</tr>').appendTo('#submissionTable');
+            counter++;
+            return false;
+        });
+    });
+    function removeTr(index) {
+        if (counter > 1) {
+            $('#tablerow' + index).remove();
+            counter--;
+        }
+        return false;
+    }
+</script>
