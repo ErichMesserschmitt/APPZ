@@ -80,7 +80,7 @@
 
                         </td>
                         <td>
-                            <button type="button" class="btn btn-primary" onclick="removeTr(0);">Delete</button>
+                            <button type="button" class="btnDelete" onclick="removeTr(0);">Delete</button>
                         </td>
                     </tr>
                         }
@@ -124,11 +124,7 @@
             return false;
         });
     });
-    function removeTr(index) {
-        if (counter > 1) {
-            $('#tablerow' + index).remove();
-            counter--;
-        }
-        return false;
-    }
+    $("#submissionTable").on('click', '.btnDelete', function () {
+        $(this).closest('tr').remove();
+    });
 </script>
