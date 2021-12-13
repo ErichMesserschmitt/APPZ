@@ -1,5 +1,5 @@
 ﻿
-@model IEnumerable<APPZ_new.Models.Task>
+@model IEnumerable<APPZ_new.SqlTaskModels.SqlTask>
 
 <div class="container p-3">
     <div class="row pt-4">
@@ -15,7 +15,6 @@
             <thead>
             <tr>
                 <th>Title</th>
-                <th>Descriptions</th>
                 <th>Severity</th>
                 <th>Options</th>
             </tr>
@@ -25,11 +24,10 @@
             {
                 <tr>
                     <td width="25%">@task.Title</td>
-                    <td width="25%">@task.Description</td>
                     <td width="25%">@task.Severity</td>
                     <td width="30%">
                         <div class="w-100 btn-group" role="group">
-                            <a asp-controller="UserTasks" asp-action="ViewDetailedResult" asp-route-Id="@task.Id" class="btn btn-success mx-1">View Results</a>
+                            <a asp-controller="UserTasks" asp-action="ViewSqlResult" asp-route-Id="@task.Id" class="btn btn-success mx-1">View Results</a>
                              </div>
                     </td>
                 </tr>
