@@ -97,7 +97,7 @@ namespace APPZ_new.Controllers
             };
             _context.UserTasks.Add(userTask);
             _context.SaveChanges();
-            return RedirectToAction(nameof(ViewResult),  result);
+            return RedirectToAction(nameof(ViewResult), result);
         }
         public async Task<ActionResult> CompleteSqlTask(IFormCollection form)
         {
@@ -112,14 +112,12 @@ namespace APPZ_new.Controllers
                 TaskId = int.Parse(taskId),
                 UserId = userId,
                 Id = 0,
-        };
-
-
+            };
 
             var testList = form.Keys.ToList().FindAll(s => s.StartsWith("Id["));
             bool isCorrect = true;
             int previousSortId = -1;
-            foreach(var item in testList)
+            foreach (var item in testList)
             {
                 Microsoft.Extensions.Primitives.StringValues unuusedVar;
                 var tempid = item.Remove(0, 3);
@@ -133,22 +131,24 @@ namespace APPZ_new.Controllers
                 if (answer.SortValue < previousSortId && !answer.IsUnUsed && !isUnUsed)
                 {
                     isCorrect = false;
-                } else
-                {
-                    if(!answer.IsUnUsed)
-                    previousSortId = answer.SortValue;
                 }
-               
+                else
+                {
+                    if (!answer.IsUnUsed)
+                        previousSortId = answer.SortValue;
+                }
+
                 answers.Add(answer);
 
             }
             if (isCorrect)
             {
                 userTask.Mark = 10;
-                //switch (_context.SqlTasks.FirstOrDefault(s => s.Id == taskId).Severity)
+                //сране северіті крашиться я не знаю чого бляха воно всьо є в бд я хз
+                //switch (_context.SqlTasks.FirstOrDefault(s => s.Id == taskId).Severity) 
                 //{
                 //    case TaskSeverity.Hard:
-                        
+
                 //        break;
                 //    case TaskSeverity.Medium:
                 //        userTask.Mark = 5;
@@ -157,7 +157,8 @@ namespace APPZ_new.Controllers
                 //        userTask.Mark = 2;
                 //        break;
                 //}
-            } else
+            }
+            else
             {
                 userTask.Mark = 0;
             }
@@ -165,11 +166,18 @@ namespace APPZ_new.Controllers
             _context.Add(userTask);
             _context.SaveChanges();
 
-            return RedirectToAction("SqlTaskList");
+            var result = new ResultDTO
+            {
+                TaskId = int.Parse(taskId),
+                TotalQuestionsCount = 1,
+                CorrectAnswersCount = isCorrect ? 1 : 0
+            };
+
+            return RedirectToAction(nameof(ViewResult), result);
         }
 
-            //when user complete task
-            public async Task<ActionResult> ViewResult(ResultDTO resultDto)
+        //when user complete task
+        public async Task<ActionResult> ViewResult(ResultDTO resultDto)
         {
             return View(resultDto);
         }
@@ -182,9 +190,6 @@ namespace APPZ_new.Controllers
                               .Include(x => x.UserAnswers)
                               .ThenInclude(X => X.Question)
                               .FirstOrDefault(x => x.Id == userTaskId);
-
-          
-
             var task = _context.Tasks.FirstOrDefault(x => x.Id == userTask.TaskId);
             return View(userTask);
         }
@@ -202,10 +207,50 @@ namespace APPZ_new.Controllers
         }
 
 
-        public IActionResult UsersTaskListNew()
+        public IActionResult UsersTaskListNew(int? categoryId)
         {
-            var tasks = _context.SqlTasks;
+            string currentUserName = User.Identity.Name;
+            var userId = _context.Users.Where(q => q.Name == currentUserName).Select(p => p.Id).FirstOrDefault();
+
+            IEnumerable<SqlUserTask> userTask = _context.SqlUserTasks.Where(p => p.UserId == userId);
+
+            var tasks = _context.SqlTasks.Where(p => !userTask.Select(p => p.TaskId).Contains(p.Id)).OrderBy(x => x.Severity);
             return View(tasks);
+        }
+
+        public async Task<IActionResult> UserSqlPassedTaskList()
+        {
+            string currentUserName = User.Identity.Name;
+            IEnumerable<SqlUserTask> userTask = _context.SqlUserTasks;
+            IEnumerable<Models.User> user = _context.Users;
+            IEnumerable<SqlTask> tasks = _context.SqlTasks;
+
+
+            var passedTask = tasks.Join(userTask, p => p.Id, q => q.TaskId,
+                (p, q) => new
+                {
+                    ID = p.Id,
+                    Title = p.Title,
+                    Severity = p.Severity,
+                    UserId = q.UserId,
+                    CategoryId = p.CategoryId
+                }).Join(user, p => p.UserId, q => q.Id, (p, q) => new
+                {
+                    Id = p.ID,
+                    Title = p.Title,
+                    Severity = p.Severity,
+                    UserName = q.Name,
+                    CategoryId = p.CategoryId
+                }).Where(p => p.UserName == currentUserName).Select(p => new Models.Task
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Severity = p.Severity,
+                    CategoryId = p.CategoryId,
+                });
+
+
+            return View(passedTask);
         }
         public async Task<IActionResult> UsersPassedTaskList()
         {
@@ -226,22 +271,22 @@ namespace APPZ_new.Controllers
                     Status = q.Status,
                     CategoryId = p.CategoryId
                 }).Join(user, p => p.UserId, q => q.Id, (p, q) => new
-            {
-                Id = p.ID,
-                Title = p.Title,
-                Description = p.Description,
-                Severity = p.Severity,
-                Status = p.Status,
-                UserName = q.Name,
-                CategoryId = p.CategoryId
-            }).Where(p=> p.UserName == currentUserName).Select(p => new Models.Task
-            {
-                Id = p.Id,
-                Title = p.Title,
-                Severity = p.Severity,
-                CategoryId = p.CategoryId,
-                Description = p.Description
-            });
+                {
+                    Id = p.ID,
+                    Title = p.Title,
+                    Description = p.Description,
+                    Severity = p.Severity,
+                    Status = p.Status,
+                    UserName = q.Name,
+                    CategoryId = p.CategoryId
+                }).Where(p => p.UserName == currentUserName).Select(p => new Models.Task
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Severity = p.Severity,
+                    CategoryId = p.CategoryId,
+                    Description = p.Description
+                });
 
 
             return View(passedTask);
